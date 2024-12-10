@@ -14,6 +14,8 @@ const Board = () => {
   const [flippedCells, setFlippedCells] = useState([]);
   const [blackCount, setBlackCount] = useState(2);
   const [whiteCount, setWhiteCount] = useState(2);
+  const [gameOver, setGameOver] = useState(false);
+
 
   useEffect(() => {
     initializeBoard();
@@ -22,6 +24,17 @@ const Board = () => {
   useEffect(() => {
     calculateValidMoves();
     countPieces();
+
+    // Check if the current player has any valid moves
+    if (!hasValidMoves(currentPlayer)) {
+      const opponent = currentPlayer === BLACK ? WHITE : BLACK;
+      if (!hasValidMoves(opponent)) {
+        console.log("No moves left for both players. Game over!");
+        return;
+      }
+      console.log(`${currentPlayer} has no valid moves. Switching to ${opponent}`);
+      setCurrentPlayer(opponent);
+    }
   }, [board, currentPlayer]);
 
   const initializeBoard = () => {
@@ -144,6 +157,21 @@ const Board = () => {
     setTimeout(() => setFlippedCells([]), 500);
   };
 
+  const hasValidMoves = (player) => {
+    for (let row = 0; row < BOARD_SIZE; row++) {
+      for (let col = 0; col < BOARD_SIZE; col++) {
+        if (isValidMove(row, col, player)) {
+          return true; 
+        }
+      }
+    }
+    return false;  
+  };
+  const isBoardFull = () => {
+    return board.every(row => row.every(cell => cell !== EMPTY));
+  };
+
+
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh" }}>
       <h1>Othello</h1>
@@ -210,7 +238,15 @@ const Board = () => {
           })
         )}
       </div>
+      {isBoardFull() ? (
+    <div style={{ marginTop: "20px", color: "red", fontWeight: "bold" }}>
+      Game Over! No more moves left.
     </div>
+) : null}
+
+
+    </div>
+
   );
 };
 
