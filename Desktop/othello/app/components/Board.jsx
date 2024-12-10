@@ -1,5 +1,6 @@
 "use client"
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import WelcomeScreen from './WelcomeScreen';
 
 const BOARD_SIZE = 8;
 const EMPTY = null;
@@ -9,6 +10,7 @@ const WHITE = "W";
 const Board = () => {
   const [board, setBoard] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(BLACK);
+  const [showWelcome, setShowWelcome] = useState(true);
 
   useEffect(() => {
     initializeBoard();
@@ -89,14 +91,23 @@ const Board = () => {
     setCurrentPlayer(currentPlayer === BLACK ? WHITE : BLACK);
   };
 
+  const startGame = () => {
+    setShowWelcome(false);
+    initializeBoard();
+  };
+
   return (
     <div>
-      <h1>Othello</h1>
-      <h2>Current Player: {currentPlayer === BLACK ? "Black" : "White"}</h2>
-      <div style={{ display: "grid", gridTemplateColumns: `repeat(${BOARD_SIZE}, 40px)` }}>
-        {board.map((row, rowIndex) =>
-          row.map((cell, colIndex) => (
-            <div
+      {showWelcome ? (
+        <WelcomeScreen onStart={startGame} />
+      ) : (
+        <>
+          <h1>Othello</h1>
+          <h2>Current Player: {currentPlayer === BLACK ? "Black" : "White"}</h2>
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${BOARD_SIZE}, 40px)` }}>
+            {board.map((row, rowIndex) =>
+              row.map((cell, colIndex) => (
+                <div
               key={`${rowIndex}-${colIndex}`}
               onClick={() => makeMove(rowIndex, colIndex)}
               style={{
@@ -111,8 +122,10 @@ const Board = () => {
               }}
             ></div>
           ))
-        )}
-      </div>
+          )}
+          </div>
+        </>
+      )} 
     </div>
   );
 };
