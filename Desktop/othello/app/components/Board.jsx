@@ -1,6 +1,6 @@
-"use client";
-
-import { useState, useEffect } from "react";
+"use client"
+import React, { useState, useEffect } from "react";
+import WelcomeScreen from './WelcomeScreen';
 
 const BOARD_SIZE = 8;
 const EMPTY = null;
@@ -10,6 +10,7 @@ const WHITE = "W";
 const Board = () => {
   const [board, setBoard] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(BLACK);
+  const [showWelcome, setShowWelcome] = useState(true);
   const [validMoves, setValidMoves] = useState([]);
   const [flippedCells, setFlippedCells] = useState([]);
   const [blackCount, setBlackCount] = useState(2);
@@ -172,81 +173,88 @@ const Board = () => {
   };
 
 
+  const startGame = () => {
+    setShowWelcome(false);
+    initializeBoard();
+  };
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh" }}>
-      <h1>Othello</h1>
-      <h2>Current Player: {currentPlayer === BLACK ? "Black" : "White"}</h2>
-      <h3>Black Pieces: {blackCount} | White Pieces: {whiteCount}</h3>
+    <div>
+    {showWelcome ? (
+      <WelcomeScreen onStart={startGame} />
+    ) : (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh" }}>
+        <h1>Othello</h1>
+        <h2>Current Player: {currentPlayer === BLACK ? "Black" : "White"}</h2>
+        <h3>Black Pieces: {blackCount} | White Pieces: {whiteCount}</h3>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${BOARD_SIZE}, 60px)`,
+            gridTemplateRows: `repeat(${BOARD_SIZE}, 60px)`,
+            gap: "2px",
+            padding: "10px",
+            backgroundColor: "#2e8b57",
+            borderRadius: "8px",
+          }}
+        >
+          {board.map((row, rowIndex) =>
+            row.map((cell, colIndex) => {
+              const isMove = validMoves.some(([r, c]) => r === rowIndex && c === colIndex);
+              const isFlipped = flippedCells.some(([r, c]) => r === rowIndex && c === colIndex);
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${BOARD_SIZE}, 60px)`,
-          gridTemplateRows: `repeat(${BOARD_SIZE}, 60px)`,
-          gap: "2px",
-          padding: "10px",
-          backgroundColor: "#2e8b57",
-          borderRadius: "8px",
-        }}
-      >
-        {board.map((row, rowIndex) =>
-          row.map((cell, colIndex) => {
-            const isMove = validMoves.some(([r, c]) => r === rowIndex && c === colIndex);
-            const isFlipped = flippedCells.some(([r, c]) => r === rowIndex && c === colIndex);
-
-            return (
-              <div
-                key={`${rowIndex}-${colIndex}`}
-                onClick={() => makeMove(rowIndex, colIndex)}
-                style={{
-                  width: "60px",
-                  height: "60px",
-                  border: "1px solid #444",
-                  backgroundColor: cell === BLACK ? "black" : cell === WHITE ? "white" : isMove ? "rgba(0, 255, 0, 0.3)" : "green",
-                  position: "relative",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  transform: isFlipped ? "rotateY(180deg)" : "rotateY(0)",
-                  transition: "transform 0.5s ease-in-out",
-                  perspective: "1000px",
-                }}
-              >
-                {cell && (
-                  <div
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      borderRadius: "50%",
-                      backgroundColor: cell === BLACK ? "black" : "white",
-                    }}
-                  />
-                )}
-                {isMove && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                      backgroundColor: "rgba(0, 255, 0, 0.5)",
-                    }}
-                  />
-                )}
-              </div>
-            );
-          })
-        )}
+              return (
+                <div
+                  key={`${rowIndex}-${colIndex}`}
+                  onClick={() => makeMove(rowIndex, colIndex)}
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    border: "1px solid #444",
+                    backgroundColor: cell === BLACK ? "black" : cell === WHITE ? "white" : isMove ? "rgba(0, 255, 0, 0.3)" : "green",
+                    position: "relative",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    transform: isFlipped ? "rotateY(180deg)" : "rotateY(0)",
+                    transition: "transform 0.5s ease-in-out",
+                    perspective: "1000px",
+                  }}
+                >
+                  {cell && (
+                    <div
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                        backgroundColor: cell === BLACK ? "black" : "white",
+                      }}
+                    />
+                  )}
+                  {isMove && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                        backgroundColor: "rgba(0, 255, 0, 0.5)",
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+        {isBoardFull() ? (
+          <div style={{ marginTop: "20px", color: "red", fontWeight: "bold" }}>
+            Game Over! No more moves left.
+          </div>
+        ) : null}
       </div>
-      {isBoardFull() ? (
-    <div style={{ marginTop: "20px", color: "red", fontWeight: "bold" }}>
-      Game Over! No more moves left.
+    )}
     </div>
-) : null}
-
-
-    </div>
-
   );
 };
 
