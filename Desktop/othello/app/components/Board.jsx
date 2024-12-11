@@ -253,13 +253,16 @@ const Board = () => {
           <h1>Othello</h1>
           <h2>
             Current Player:
-            {gameMode === 'computer' && currentPlayer === WHITE && 'Computer'}
-            {gameMode === 'computer' && currentPlayer === BLACK && 'Human'}
-            {gameMode !== 'computer' && currentPlayer === BLACK && 'Player 1'}
-            {gameMode !== 'computer' && currentPlayer === WHITE && 'Player 2'}
+            {gameMode !== 'computer' && gameMode !== 'obstaclesVsComputer' && currentPlayer === WHITE && 'Player 2'}
+            {gameMode !== 'computer' && gameMode !== 'obstaclesVsComputer' && currentPlayer === BLACK && 'Player 1'}
+            {gameMode === 'computer' || gameMode === 'obstaclesVsComputer' && currentPlayer === WHITE && 'Computer'}
+            {gameMode === 'computer' || gameMode === 'obstaclesVsComputer' && currentPlayer === BLACK && 'Human'}
+            {gameMode !== 'computer' || gameMode !== 'obstaclesVsComputer' && currentPlayer === BLACK && 'Player 1'}
+            {gameMode !== 'computer' || gameMode !== 'obstaclesVsComputer' && currentPlayer === WHITE && 'Player 2'}
           </h2>
           <h2>Current Choice: {currentPlayer === WHITE ? 'White' : 'black'}</h2>
           {gameMode === 'computer' && currentPlayer === WHITE && <h2>Computer is thinking...</h2>}
+          {gameMode === 'obstaclesVsComputer' && currentPlayer === WHITE && <h2>Computer is thinking...</h2>}
           <h3>
             Black Pieces: {blackCount} | White Pieces: {whiteCount}
           </h3>
@@ -333,7 +336,14 @@ const Board = () => {
             )}
           </div>
           {isBoardFull() ? (
-            <div style={{marginTop: '20px', color: 'red', fontWeight: 'bold'}}>Game Over! No more moves left.</div>
+            <div style={{marginTop: '20px', color: 'red', fontWeight: 'bold'}}>
+              Game Over! No more moves left.
+              {whiteCount > blackCount ? 'White wins!' : 'Black wins!'}
+              {/* styled button */}
+              <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px'}}>
+                <button style={{backgroundColor: 'green', color: 'white', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer'}} onClick={() => startGame(gameMode)}>Play Again</button>
+              </div>
+            </div>
           ) : null}
         </div>
       )}
