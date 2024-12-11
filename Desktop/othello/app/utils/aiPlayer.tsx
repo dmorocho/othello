@@ -77,24 +77,33 @@ ${boardState}
 VALID MOVES AVAILABLE:
 ${validMovesStr}
 
-Choose one move from the valid moves list provided above. Return ONLY a JSON object with row and column indices matching one of the valid moves. Example response: {"row": 2, "col": 3}
+Choose one move from the valid moves list provided above. Respond with ONLY a JSON object with row and column indices matching one of the valid moves. Your response must be exactly in this format: {"row": 2, "col": 3}
 
-Your response must be exactly one of the valid moves listed above.`
+Do not include any additional text, explanation, or formatting - just the JSON object.`
 
     const msg = await anthropic.messages.create({
       model: 'claude-3-sonnet-20240229',
       max_tokens: 1024,
       messages: [{role: 'user', content: prompt}],
     })
-    // @ts-expect-error TODO: fix this
-    const response = JSON.parse(msg.content[0].text)
+
+    // Clean and parse the response
+    const responseText = msg.content[0].text.trim()
+    console.log('Raw AI response:', responseText) // For debugging
+
+    let response
+    try {
+      response = JSON.parse(responseText)
+    } catch (parseError) {
+      console.error('Failed to parse AI response:', parseError)
+      return validMoves[0] // Fallback to first valid move
+    }
 
     // Verify that the AI's move is in the valid moves list
     const isValidAIMove = validMoves.some((move) => move.row === response.row && move.col === response.col)
 
     if (!isValidAIMove) {
       console.error('AI returned invalid move:', response)
-      // If AI somehow returns an invalid move, choose the first valid move instead
       return validMoves[0]
     }
 
