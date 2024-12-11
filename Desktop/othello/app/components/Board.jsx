@@ -16,7 +16,8 @@ const Board = () => {
   const [flippedCells, setFlippedCells] = useState([])
   const [blackCount, setBlackCount] = useState(2)
   const [whiteCount, setWhiteCount] = useState(2)
-  const [gameOver, setGameOver] = useState(false)
+  // const [gameOver, setGameOver] = useState(false)
+  const gameOver = false
   const [gameMode, setGameMode] = useState(null)
 
   useEffect(() => {
