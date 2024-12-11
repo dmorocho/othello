@@ -253,6 +253,8 @@ const Board = () => {
           <h1>Othello</h1>
           <h2>
             Current Player:
+            {gameMode !== 'computer' && gameMode !== 'obstaclesVsComputer' && currentPlayer === WHITE && 'Player 2'}
+            {gameMode !== 'computer' && gameMode !== 'obstaclesVsComputer' && currentPlayer === BLACK && 'Player 1'}
             {gameMode === 'computer' || gameMode === 'obstaclesVsComputer' && currentPlayer === WHITE && 'Computer'}
             {gameMode === 'computer' || gameMode === 'obstaclesVsComputer' && currentPlayer === BLACK && 'Human'}
             {gameMode !== 'computer' || gameMode !== 'obstaclesVsComputer' && currentPlayer === BLACK && 'Player 1'}
