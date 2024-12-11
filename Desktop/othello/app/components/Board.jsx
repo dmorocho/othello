@@ -17,16 +17,17 @@ const Board = () => {
   const [blackCount, setBlackCount] = useState(2)
   const [whiteCount, setWhiteCount] = useState(2)
   const [gameOver, setGameOver] = useState(false)
+  const [gameMode, setGameMode] = useState(null)
 
   useEffect(() => {
     initializeBoard()
   }, [])
 
   useEffect(() => {
-    if (currentPlayer === WHITE && !gameOver) {
+    if (gameMode === 'computer' && currentPlayer === WHITE && !gameOver) {
       handleAIMove()
     }
-  }, [currentPlayer, gameOver])
+  }, [currentPlayer, gameOver, gameMode])
 
   useEffect(() => {
     calculateValidMoves()
@@ -198,8 +199,9 @@ const Board = () => {
     return board.every((row) => row.every((cell) => cell !== EMPTY))
   }
 
-  const startGame = () => {
+  const startGame = (mode) => {
     setShowWelcome(false)
+    setGameMode(mode)
     initializeBoard()
   }
 
