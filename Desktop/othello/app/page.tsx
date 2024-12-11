@@ -1,4 +1,3 @@
-import Image from "next/image";
 import GameBoard from "./components/Board"
 
 export default function Home() {

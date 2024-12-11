@@ -86,7 +86,7 @@ Your response must be exactly one of the valid moves listed above.`
       max_tokens: 1024,
       messages: [{role: 'user', content: prompt}],
     })
-
+    // @ts-expect-error TODO: fix this
     const response = JSON.parse(msg.content[0].text)
 
     // Verify that the AI's move is in the valid moves list
