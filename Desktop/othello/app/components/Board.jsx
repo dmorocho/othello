@@ -72,6 +72,7 @@ const Board = () => {
       return false
     }
 
+
     for (let [dx, dy] of directions) {
       let x = row + dx
       let y = col + dy
@@ -220,7 +221,14 @@ const Board = () => {
           }}
         >
           <h1>Othello</h1>
-          <h2>Current Player: {currentPlayer === BLACK ? 'Black' : 'White'}</h2>
+          <h2>Current Player: 
+            { gameMode === 'computer' && currentPlayer === WHITE && 'Computer'}
+            { gameMode === 'computer' && currentPlayer === BLACK && 'Human'}
+            {gameMode !== 'computer' && currentPlayer === BLACK && 'Player 1'}
+            {gameMode !== 'computer' && currentPlayer === WHITE && 'Player 2'}
+          </h2>
+          <h2>Current Choice: {currentPlayer === WHITE ? 'White' : 'black'}</h2>
+          {gameMode === 'computer' && currentPlayer === WHITE && <h2>Computer is thinking...</h2>}
           <h3>
             Black Pieces: {blackCount} | White Pieces: {whiteCount}
           </h3>
