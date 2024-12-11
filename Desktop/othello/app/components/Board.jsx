@@ -19,13 +19,14 @@ const Board = () => {
   // const [gameOver, setGameOver] = useState(false)
   const gameOver = false
   const [gameMode, setGameMode] = useState(null)
+  const [obstacles, setObstacles] = useState([])
 
   useEffect(() => {
     initializeBoard()
   }, [])
 
   useEffect(() => {
-    if (gameMode === 'computer' && currentPlayer === WHITE && !gameOver) {
+    if ((gameMode === 'computer' || gameMode === 'obstaclesVsComputer') && currentPlayer === WHITE && !gameOver) {
       handleAIMove()
     }
   }, [currentPlayer, gameOver, gameMode])
@@ -46,13 +47,33 @@ const Board = () => {
     }
   }, [board, currentPlayer])
 
-  const initializeBoard = () => {
+  const initializeBoard = (mode) => {
     const initialBoard = Array.from({length: BOARD_SIZE}, () => Array(BOARD_SIZE).fill(EMPTY))
 
+    // Set initial pieces
     initialBoard[3][3] = WHITE
     initialBoard[3][4] = BLACK
     initialBoard[4][3] = BLACK
     initialBoard[4][4] = WHITE
+
+    if (mode === 'obstacles' || mode === 'obstaclesVsComputer') {
+      // Set random obstacles for both obstacle modes
+      const obstacleCount = 5 // Define how many obstacles you want
+      const obstaclePositions = new Set()
+
+      while (obstaclePositions.size < obstacleCount) {
+        const row = Math.floor(Math.random() * BOARD_SIZE)
+        const col = Math.floor(Math.random() * BOARD_SIZE)
+
+        // Ensure the position is empty and not already an obstacle
+        if (initialBoard[row][col] === EMPTY) {
+          initialBoard[row][col] = 'X' // Marking obstacles with 'X'
+          obstaclePositions.add(`${row},${col}`) // Store the position as a string
+        }
+      }
+
+      setObstacles(Array.from(obstaclePositions).map((pos) => pos.split(',').map(Number))) // Convert back to array of [row, col]
+    }
 
     setBoard(initialBoard)
   }
@@ -69,10 +90,17 @@ const Board = () => {
   ]
 
   const isValidMove = (row, col, player) => {
-    if (row < 0 || row >= BOARD_SIZE || col < 0 || col >= BOARD_SIZE || !board[row] || board[row][col] !== EMPTY) {
+    if (
+      row < 0 ||
+      row >= BOARD_SIZE ||
+      col < 0 ||
+      col >= BOARD_SIZE ||
+      !board[row] ||
+      board[row][col] !== EMPTY ||
+      board[row][col] === 'X'
+    ) {
       return false
     }
-
 
     for (let [dx, dy] of directions) {
       let x = row + dx
@@ -204,7 +232,7 @@ const Board = () => {
   const startGame = (mode) => {
     setShowWelcome(false)
     setGameMode(mode)
-    initializeBoard()
+    initializeBoard(mode)
   }
 
   return (
@@ -222,9 +250,10 @@ const Board = () => {
           }}
         >
           <h1>Othello</h1>
-          <h2>Current Player: 
-            { gameMode === 'computer' && currentPlayer === WHITE && 'Computer'}
-            { gameMode === 'computer' && currentPlayer === BLACK && 'Human'}
+          <h2>
+            Current Player:
+            {gameMode === 'computer' && currentPlayer === WHITE && 'Computer'}
+            {gameMode === 'computer' && currentPlayer === BLACK && 'Human'}
             {gameMode !== 'computer' && currentPlayer === BLACK && 'Player 1'}
             {gameMode !== 'computer' && currentPlayer === WHITE && 'Player 2'}
           </h2>
@@ -252,13 +281,21 @@ const Board = () => {
                 return (
                   <div
                     key={`${rowIndex}-${colIndex}`}
-                    onClick={() => makeMove(rowIndex, colIndex)}
+                    onClick={() => cell !== 'X' && makeMove(rowIndex, colIndex)}
                     style={{
                       width: '60px',
                       height: '60px',
                       border: '1px solid #444',
                       backgroundColor:
-                        cell === BLACK ? 'black' : cell === WHITE ? 'white' : isMove ? 'rgba(0, 255, 0, 0.3)' : 'green',
+                        cell === BLACK
+                          ? 'black'
+                          : cell === WHITE
+                          ? 'white'
+                          : cell === 'X'
+                          ? 'gray'
+                          : isMove
+                          ? 'rgba(0, 255, 0, 0.3)'
+                          : 'green',
                       position: 'relative',
                       display: 'flex',
                       justifyContent: 'center',
@@ -268,7 +305,7 @@ const Board = () => {
                       perspective: '1000px',
                     }}
                   >
-                    {cell && (
+                    {cell && cell !== 'X' && (
                       <div
                         style={{
                           width: '50px',

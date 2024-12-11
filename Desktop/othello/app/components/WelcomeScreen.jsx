@@ -1,33 +1,43 @@
-import React, { useEffect } from 'react';
-import '../styles/WelcomeScreen.css';
+import React, {useEffect} from 'react'
+import '../styles/WelcomeScreen.css'
 
-const WelcomeScreen = ({ onStart }) => {
+const WelcomeScreen = ({onStart}) => {
   useEffect(() => {
-    const styleSheet = createStyleSheet();
-    document.head.appendChild(styleSheet);
+    const styleSheet = createStyleSheet()
+    document.head.appendChild(styleSheet)
 
     return () => {
-      document.head.removeChild(styleSheet);
-    };
-  }, []);
+      document.head.removeChild(styleSheet)
+    }
+  }, [])
 
   const handlePlayerChoice = (mode) => {
-    onStart(mode);
-  };
+    onStart(mode)
+  }
 
   return (
     <div className="welcome-container">
       <h1 className="welcome-title">Welcome to Othello!</h1>
-      <button onClick={() => handlePlayerChoice('twoPlayers')} className="start-button">Play with Two Players</button>
-      <button onClick={() => handlePlayerChoice('computer')} className="start-button">Play with Computer</button>
+      <button onClick={() => handlePlayerChoice('twoPlayers')} className="start-button">
+        Play with Two Players
+      </button>
+      <button onClick={() => handlePlayerChoice('computer')} className="start-button">
+        Play with Computer
+      </button>
+      <button onClick={() => handlePlayerChoice('obstacles')} className="start-button">
+        Play with Obstacles
+      </button>
+      <button onClick={() => handlePlayerChoice('obstaclesVsComputer')} className="start-button">
+        Play with Obstacles VS Computer
+      </button>
     </div>
-  );
-};
+  )
+}
 
 // Function to create a style element
 const createStyleSheet = () => {
-  const styleSheet = document.createElement("style");
-  styleSheet.type = "text/css";
+  const styleSheet = document.createElement('style')
+  styleSheet.type = 'text/css'
   styleSheet.innerText = `
     @keyframes fadeIn {
       from {
@@ -39,8 +49,8 @@ const createStyleSheet = () => {
         transform: translateY(0);
       }
     }
-  `;
-  return styleSheet;
-};
+  `
+  return styleSheet
+}
 
-export default WelcomeScreen;
+export default WelcomeScreen
