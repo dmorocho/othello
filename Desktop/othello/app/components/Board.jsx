@@ -19,6 +19,7 @@ const Board = () => {
   // const [gameOver, setGameOver] = useState(false)
   const gameOver = false
   const [gameMode, setGameMode] = useState(null)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [obstacles, setObstacles] = useState([])
 
   useEffect(() => {
