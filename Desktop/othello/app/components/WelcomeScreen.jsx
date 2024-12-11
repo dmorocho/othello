@@ -27,6 +27,9 @@ const WelcomeScreen = ({onStart}) => {
       <button onClick={() => handlePlayerChoice('obstacles')} className="start-button">
         Play with Obstacles
       </button>
+      <button onClick={() => handlePlayerChoice('obstaclesVsComputer')} className="start-button">
+        Play with Obstacles VS Computer
+      </button>
     </div>
   )
 }

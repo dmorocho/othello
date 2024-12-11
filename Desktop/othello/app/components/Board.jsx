@@ -26,7 +26,7 @@ const Board = () => {
   }, [])
 
   useEffect(() => {
-    if (gameMode === 'computer' && currentPlayer === WHITE && !gameOver) {
+    if ((gameMode === 'computer' || gameMode === 'obstaclesVsComputer') && currentPlayer === WHITE && !gameOver) {
       handleAIMove()
     }
   }, [currentPlayer, gameOver, gameMode])
@@ -56,8 +56,8 @@ const Board = () => {
     initialBoard[4][3] = BLACK
     initialBoard[4][4] = WHITE
 
-    if (mode === 'obstacles') {
-      // Set random obstacles only for the obstacles mode
+    if (mode === 'obstacles' || mode === 'obstaclesVsComputer') {
+      // Set random obstacles for both obstacle modes
       const obstacleCount = 5 // Define how many obstacles you want
       const obstaclePositions = new Set()
 
