@@ -71,3 +71,8 @@ The game includes an AI player powered by Anthropic's Claude API. To enable this
 1. Make sure you have set up your `.env.local` file with the API key as described above
 2. The AI player will automatically be available in the game once the API key is properly configured
 3. If you don't set up the API key, the AI player functionality will not work
+
+### DEMO
+
+https://github.com/user-attachments/assets/50241f87-376d-402e-a213-77768929558b
+
